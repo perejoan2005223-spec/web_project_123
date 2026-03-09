@@ -1,8 +1,10 @@
-# web_project/urls.py
+# DjangoProject/urls.py
+
 from django.contrib import admin
-from django.urls import include, path  # Importante añadir 'include' aquí
+from django.urls import include, path
 
 urlpatterns = [
-    path('admin/', admin.site.urls),   # Panel de administración predeterminado
-    path('', include('blog.urls')),    # Reenvía las peticiones a blog/urls.py
+    path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')),  # all of Django's auth views (login, logout, etc.)
+    path('', include('blog.urls')),
 ]
