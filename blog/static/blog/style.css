@@ -52,3 +52,32 @@ footer {
     margin-top: 3rem;
     border-top: 1px solid lightgray;  /* 1px line, solid (not dashed), lightgray */
 }
+
+/* Post list items */
+.post-item {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid lightgray;  /* line between posts */
+}
+
+.post-item h2 a {  /* <a> inside <h2> inside .post-item */
+    color: darkslategray;
+    text-decoration: none;
+}
+
+/* Post metadata (author, date) */
+.post-meta {
+    color: gray;
+    font-size: 0.9rem;  /* slightly smaller than normal (0.9 x 16px ≈ 14px) */
+}
+
+/* Post body text */
+.post-body {
+    margin-top: 1.5rem;
+    white-space: pre-line;  /* preserves line breaks from the text */
+}
+
+/* Back navigation link */
+.back-link {
+    margin-top: 2rem;
+}

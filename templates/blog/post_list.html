@@ -1,0 +1,22 @@
+<!-- templates/blog/post_list.html -->
+
+{% extends "base.html" %}
+
+{% block title %}All Posts - My Blog{% endblock %}
+
+{% block content %}
+<h1>All Posts</h1>
+
+{% for post in posts %}  <!-- loop over all posts from the database -->
+<article class="post-item">  <!-- <article> = semantic tag for self-contained content -->
+    <h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>  <!-- link to the post detail page -->
+    <p class="post-meta">
+        By {{ post.author.username }} - {{ post.created_at|date:"F j, Y" }}  <!-- F=month, j=day, Y=year -->
+    </p>
+    <p>{{ post.body|truncatewords:30 }}</p>  <!-- show only first 30 words -->
+    <a href="{{ post.get_absolute_url }}">Read more &rarr;</a>  <!-- &rarr; = → arrow -->
+</article>
+{% empty %}  <!-- shown only if there are no posts -->
+<p>No posts yet.</p>
+{% endfor %}
+{% endblock %}
