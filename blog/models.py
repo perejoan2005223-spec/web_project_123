@@ -15,7 +15,7 @@ class Post(models.Model):
         ordering = ['-created_at']  # default sort: newest first ('-' = descending)
 
     def __str__(self):
-        return self.title  # shown in admin panel and Django shell
+        return self.title  # shown in admin panel and Django shell.
 
     def get_absolute_url(self):
         # Returns this post's URL (e.g. /posts/3/)
