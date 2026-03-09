@@ -7,21 +7,6 @@
 <body>
     <nav>
         <a href="{% url 'blog:home' %}">Home</a>
-    </nav>
-
-    <div class="container">
-        {% block content %}{% endblock %} </div>
-
-    <footer>
-        <p>Django Blog - 2026</p>
-    </footer>
-</body>
-</html>
-
-<!-- In templates/base.html, update the <nav> section -->
-
-<nav>
-    <a href="{% url 'blog:home' %}">Home</a>
     <a href="{% url 'blog:post_list' %}">Posts</a>
     <span class="nav-right">
         {% if user.is_authenticated %}  <!-- Django checks if the user is logged in -->
@@ -35,4 +20,16 @@
             <a href="{% url 'login' %}">Login</a>
         {% endif %}
     </span>
-</nav>
+    </nav>
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer>
+        <p>Django Blog - 2026</p>
+    </footer>
+
+</body>
+</html>
+

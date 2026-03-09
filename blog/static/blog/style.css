@@ -32,6 +32,9 @@
    Base
    ========================= */
 body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
     font-family: var(--font-base);
     line-height: 1.6;
     color: var(--color-text);
@@ -48,6 +51,7 @@ h3 {
    Layout
    ========================= */
 .container {
+    flex: 1;
     max-width: var(--container-width);
     margin: 2rem auto;
     padding: 0 1rem;
@@ -85,6 +89,17 @@ nav a:hover,
 
 .nav-user {
     color: var(--color-user-text);
+}
+
+/* =========================
+   Footer
+   ========================= */
+footer {
+    margin-top: 40px;
+    padding: 15px;
+    border-top: 1px solid var(--color-footer-border);
+    background-color: #f2f2f2;
+    color: var(--color-footer-text);
 }
 
 .inline-form
