@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  web:
+    build: .
+    container_name: opgg_profesores_web
+    ports:
+      - "8000:${PORT:-8000}"
+    volumes:
+      - .:/app  # Sincroniza el código fuente con el contenedor
+    env_file:
+      - .env
