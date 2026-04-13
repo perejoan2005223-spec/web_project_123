@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}My Blog{% endblock %}</title> <link rel="stylesheet" href="{% static 'blog/style.css' %}"> </head>
+    <title>{% block title %}Valoracions Profes{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'blog/style.css' %}">
+</head>
 <body>
  <nav class="navbar">
     <div class="nav-container">
@@ -11,7 +13,7 @@
 
         <ul class="nav-menu">
             <li><a href="{% url 'blog:home' %}" class="nav-link">Inici</a></li>
-            <li><a href="{% url 'blog:post_list' %}" class="nav-link">Professors</a></li>
+            <li><a href="{% url 'blog:professor_list' %}" class="nav-link">Professors</a></li>
         </ul>
 
         <div class="nav-auth">
@@ -34,7 +36,7 @@
     </div>
 
     <footer>
-        <p>Django Blog - 2026</p>
+        <p>Valoracions Profes - 2026</p>
     </footer>
 
 </body>
