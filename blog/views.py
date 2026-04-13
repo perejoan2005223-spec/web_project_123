@@ -25,4 +25,4 @@ class PostDetailView(DetailView):
 class PostSignUpView(CreateView):
     form_class = UserCreationForm
     success_url = '/login/'
-    template_name = 'blog/signup.html'
+    template_name = 'registration/signup.html'
