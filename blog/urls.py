@@ -8,8 +8,10 @@ app_name = 'blog'  # namespace: lets us write {% url 'blog:home' %} in templates
 
 urlpatterns = [
     path('', views.home, name='home'),  # '' = root URL (/), name='home' lets us reference it in templates
-    path('posts/', views.PostListView.as_view(), name='post_list'),        # .as_view() turns the class into a callable view
-    path('posts/<int:pk>/', views.PostDetailView.as_view(), name='post_detail'),  # <int:pk> captures the post ID from the URL
 
     path('signup/', views.PostSignUpView.as_view(), name='signup'), # Sign up page
+
+    path('profesores/', views.ProfessorListView.as_view(), name='professor_list'),
+
+    path('profesores/<int:pk>/', views.ProfessorDetailView.as_view(), name='professor_detail'),
 ]
