@@ -59,7 +59,7 @@ class Prof_Subject(models.Model):
 
 class Publication(models.Model):
     title_pub = models.CharField(max_length=200)
-    publish_date = models.DateField()
+    publish_year = models.PositiveIntegerField()
     url = models.URLField(max_length=200)
 
     #Many-to-many relation, passing through Professor_Publication
