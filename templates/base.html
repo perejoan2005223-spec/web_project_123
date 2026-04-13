@@ -7,7 +7,6 @@
 <body>
     <nav>
         <a href="{% url 'blog:home' %}">Home</a>
-    <a href="{% url 'blog:post_list' %}">Posts</a>
     <span class="nav-right">
         {% if user.is_authenticated %}  <!-- Django checks if the user is logged in -->
             <span class="nav-user">{{ user.username }}</span>
