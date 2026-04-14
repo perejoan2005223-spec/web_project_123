@@ -1,34 +1,38 @@
 {% extends "base.html" %}
 
-{% block title %}Perfil de {{ professor.name_prof }} - Valoracions Profes{% endblock %}
+{% block title %}Professors - Valoracions Profes{% endblock %}
 
 {% block content %}
-<article>
-    <h1>{{ professor.name_prof }}</h1>
+<h1>Professors</h1>
 
-    <p class="post-meta">
-        Departament: <strong>{{ professor.department.name_dept }}</strong>
-    </p>
+<div class="form-group">
+    <label for="id_professor">Cerca un professor:</label>
+    <input id="id_professor" type="text" placeholder="Escriu un nom...">
+</div>
 
-    {% if professor.profile_pic_url %}
-        <div style="margin: 20px 0;">
-            <img src="{{ professor.profile_pic_url }}" alt="Foto de {{ professor.name_prof }}" style="max-width: 200px; border-radius: 8px;">
-        </div>
-    {% endif %}
+<ul>
+{% for professor in professors %}
+    <li>
+        <a href="{% url 'blog:professor_detail' professor.pk %}">
+            {{ professor.name_prof }}
+        </a>
+    </li>
+{% empty %}
+    <li>No hi ha professors registrats.</li>
+{% endfor %}
+</ul>
 
-    <div class="post-body">
-        <h3>Assignatures que imparteix:</h3>
-        <ul>
-            {% for subject in professor.subjects.all %}
-                <li>{{ subject.name_sub }} ({{ subject.credits }} crèdits)</li>
-            {% empty %}
-                <li>No hi ha assignatures registrades.</li>
-            {% endfor %}
-        </ul>
-    </div>
-</article>
+<script>
+$(function() {
+    var professors = [
+        {% for professor in professors %}
+            "{{ professor.name_prof }}"{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+    $("#id_professor").autocomplete({
+        source: professors
+    });
+});
+</script>
 
-<p class="back-link">
-    <a href="{% url 'blog:professor_list' %}">&larr; Tornar a la llista de professors</a>
-</p>
 {% endblock %}
