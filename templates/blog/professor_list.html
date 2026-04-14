@@ -5,12 +5,12 @@
 {% block content %}
 <h1>Professors</h1>
 
-<div class="form-group">
+<div class="search-box">
     <label for="id_professor">Cerca un professor:</label>
     <input id="id_professor" type="text" placeholder="Escriu un nom...">
 </div>
 
-<ul>
+<ul class="professor-list">
 {% for professor in professors %}
     <li>
         <a href="{% url 'blog:professor_detail' professor.pk %}">
@@ -26,11 +26,14 @@
 $(function() {
     var professors = [
         {% for professor in professors %}
-            "{{ professor.name_prof }}"{% if not forloop.last %},{% endif %}
+            { label: "{{ professor.name_prof }}", url: "{% url 'blog:professor_detail' professor.pk %}" }{% if not forloop.last %},{% endif %}
         {% endfor %}
     ];
     $("#id_professor").autocomplete({
-        source: professors
+        source: professors,
+        select: function (event, ui){
+            window.location.href = ui.item.url;
+        }
     });
 });
 </script>
