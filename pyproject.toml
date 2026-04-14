@@ -8,4 +8,5 @@ dependencies = [
     "django>=6.0.2",
     "gunicorn>=25.1.0",
     "requests>=2.33.1",
+    "whitenoise>=6.12.0",
 ]
