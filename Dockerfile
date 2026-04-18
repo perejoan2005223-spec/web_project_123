@@ -22,6 +22,7 @@ EXPOSE $PORT
 
 RUN python manage.py collectstatic --noinput --clear || true
 RUN python manage.py migrate
+RUN python manage.py scrape_professors
 
 # Arrancamos Gunicorn con --reload para que detecte los cambios de código en vivo
 CMD gunicorn --reload -b 0.0.0.0:$PORT web_project.wsgi:application
