@@ -1,34 +1,43 @@
-{% extends "base.html" %}
-
-{% block title %}Perfil de {{ professor.name_prof }} - Valoracions Profes{% endblock %}
+{% extends 'base.html' %}
 
 {% block content %}
-<article>
+<div class="container">
     <h1>{{ professor.name_prof }}</h1>
+    <p>Departamento: {{ professor.department.name_dept }}</p>
 
-    <p class="post-meta">
-        Departament: <strong>{{ professor.department.name_dept }}</strong>
-    </p>
+    <h3>Asignaturas que imparte:</h3>
+    <ul>
+        {% for ps in professor.prof_subject_set.all %}
+            <li>
+                <strong>{{ ps.subject.name_sub }}</strong> (Año: {{ ps.year }})
+                <a href="{% url 'blog:review_create' %}?prof_subject={{ ps.id }}">
+                    [Dejar una reseña]
+                </a>
+            </li>
+        {% empty %}
+            <li>Este profesor no tiene asignaturas asignadas.</li>
+        {% endfor %}
+    </ul>
 
-    {% if professor.profile_pic_url %}
-        <div style="margin: 20px 0;">
-            <img src="{{ professor.profile_pic_url }}" alt="Foto de {{ professor.name_prof }}" style="max-width: 200px; border-radius: 8px;">
-        </div>
-    {% endif %}
+    <hr>
 
-    <div class="post-body">
-        <h3>Assignatures que imparteix:</h3>
-        <ul>
-            {% for subject in professor.subjects.all %}
-                <li>{{ subject.name_sub }} ({{ subject.credits }} crèdits)</li>
-            {% empty %}
-                <li>No hi ha assignatures registrades.</li>
+    <h3>Reseñas de este profesor:</h3>
+    {% for ps in professor.prof_subject_set.all %}
+        {% for review in ps.reviews.all %}
+            <div class="review-box" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+                <p><strong>Usuario:</strong> {{ review.user.username }}</p>
+                <p><strong>Nota:</strong> {{ review.overall_rating }}/10 | <strong>Dificultad:</strong> {{ review.difficulty_rating }}/10</p>
+                <p>{{ review.comment }}</p>
+
+                {% if user == review.user %}
+                    <div class="actions">
+                        <a href="{% url 'blog:review_update' review.id %}" style="color: blue;">Editar</a> |
+                        <a href="{% url 'blog:review_delete' review.id %}" style="color: red;">Eliminar</a>
+                    </div>
+                {% endif %}
+            </div>
+        {% empty %}
             {% endfor %}
-        </ul>
-    </div>
-</article>
-
-<p class="back-link">
-    <a href="{% url 'blog:professor_list' %}">&larr; Tornar a la llista de professors</a>
-</p>
-{% endblock %}
+    {% endfor %}
+</div>
+{% endblock content %}
