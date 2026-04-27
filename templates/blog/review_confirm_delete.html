@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Confirmar Eliminació</h2>
+    
+    <p>Estàs segur que vols eliminar la teva ressenya sobre l'assignatura <strong>"{{ object.prof_subject }}"</strong>?</p>
+    <p>Aquesta acció no es pot desfer.</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" style="color: red;">Sí, vull eliminar-la</button>
+        <a href="{% url 'blog:home' %}">Cancel·lar i tornar</a>
+    </form>
+</div>
+{% endblock content %}

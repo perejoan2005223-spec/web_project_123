@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>{% if object %}Editar Ressenya{% else %}Nova Ressenya{% endif %}</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        
+        {{ form.as_p }}
+        
+        <button type="submit">Guardar Ressenya</button>
+        <a href="{% url 'blog:home' %}">Cancel·lar</a>
+    </form>
+</div>
+{% endblock content %}
