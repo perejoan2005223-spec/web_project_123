@@ -1,16 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
+<div class="form-narrow">
     <h2>{% if object %}Editar Ressenya{% else %}Nova Ressenya{% endif %}</h2>
 
     <form method="post">
         {% csrf_token %}
-        
+
         {{ form.as_p }}
-        
-        <button type="submit">Guardar Ressenya</button>
-        <a href="{% url 'blog:home' %}">Cancel·lar</a>
+
+        <button type="submit" class="btn-blue" style="margin-top: 15px;">Guardar Ressenya</button>
+
+        <div style="text-align: center; margin-top: 15px;">
+            <a href="{% url 'blog:home' %}" style="color: gray; text-decoration: none;">Cancel·lar i tornar</a>
+        </div>
     </form>
 </div>
 {% endblock content %}

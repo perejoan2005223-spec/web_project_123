@@ -125,13 +125,18 @@ body {
 
 .form-group { margin-bottom: 1.5rem; }
 
-.form-narrow input {
+.form-narrow input,
+.form-narrow select,
+.form-narrow textarea {
     width: 100%;
     padding: 10px;
     margin-top: 5px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    font-family: inherit;
+    resize: vertical;
 }
+
 .form-narrow p {
     margin-bottom: 1.2rem;
 }
