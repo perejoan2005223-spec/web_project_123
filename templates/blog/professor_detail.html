@@ -2,42 +2,64 @@
 
 {% block content %}
 <div class="container">
-    <h1>{{ professor.name_prof }}</h1>
-    <p>Departamento: {{ professor.department.name_dept }}</p>
+    <article>
+        <h1>{{ professor.name_prof }}</h1>
+        <p class="post-meta" style="font-size: 1.1rem;">Departament: {{ professor.department.name_dept }}</p>
 
-    <h3>Asignaturas que imparte:</h3>
-    <ul>
-        {% for ps in professor.prof_subject_set.all %}
-            <li>
-                <strong>{{ ps.subject.name_sub }}</strong> (Año: {{ ps.year }})
-                <a href="{% url 'blog:review_create' %}?prof_subject={{ ps.id }}">
-                    [Dejar una reseña]
-                </a>
-            </li>
-        {% empty %}
-            <li>Este profesor no tiene asignaturas asignadas.</li>
-        {% endfor %}
-    </ul>
+        <div class="post-body">
+            <h3>Assignatures que imparteix:</h3>
+            <ul>
+                {% for ps in professor.prof_subject_set.all %}
+                    <li style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>
+                            <strong>{{ ps.subject.name_sub }}</strong> <span style="color: #666;">(Any: {{ ps.year }})</span>
+                        </span>
+                        <a href="{% url 'blog:review_create' %}?prof_subject={{ ps.id }}" class="btn-signup" style="font-size: 0.85rem; padding: 0.4rem 0.8rem;">
+                            Deixa una ressenya
+                        </a>
+                    </li>
+                {% empty %}
+                    <li>Aquest professor no té assignatures assignades.</li>
+                {% endfor %}
+            </ul>
 
-    <hr>
+            <hr style="margin: 3rem 0 2rem 0; border: 0; border-top: 1px dashed var(--color-footer-border);">
 
-    <h3>Reseñas de este profesor:</h3>
-    {% for ps in professor.prof_subject_set.all %}
-        {% for review in ps.reviews.all %}
-            <div class="review-box" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
-                <p><strong>Usuario:</strong> {{ review.user.username }}</p>
-                <p><strong>Nota:</strong> {{ review.overall_rating }}/10 | <strong>Dificultad:</strong> {{ review.difficulty_rating }}/10</p>
-                <p>{{ review.comment }}</p>
+            <h3>Ressenyes d’aquest professor:</h3>
+            <div style="margin-top: 1.5rem;">
+                {% for ps in professor.prof_subject_set.all %}
+                    {% for review in ps.reviews.all %}
+                        <div style="background: white; border: 1px solid var(--color-footer-border); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.2rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
 
-                {% if user == review.user %}
-                    <div class="actions">
-                        <a href="{% url 'blog:review_update' review.id %}" style="color: blue;">Editar</a> |
-                        <a href="{% url 'blog:review_delete' review.id %}" style="color: red;">Eliminar</a>
-                    </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f0f0; padding-bottom: 0.8rem; margin-bottom: 1rem;">
+                                <strong style="color: var(--color-heading); font-size: 1.1rem;">👤 {{ review.user.username }}</strong>
+                                <div style="background: #f9f9f9; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.9rem;">
+                                    ⭐ Nota: <strong>{{ review.overall_rating }}/10</strong> &nbsp;|&nbsp; 📚 Dificultat: <strong>{{ review.difficulty_rating }}/10</strong>
+                                </div>
+                            </div>
+
+                            <p style="color: #444; font-size: 1.05rem; line-height: 1.6;">{{ review.comment }}</p>
+
+                            {% if user == review.user %}
+                                <div class="actions" style="margin-top: 1.5rem; text-align: right; font-size: 0.9rem;">
+                                    <a href="{% url 'blog:review_update' review.id %}" style="color: var(--color-btn-primary); text-decoration: none; margin-right: 15px; font-weight: bold;">✏️ Edita</a>
+                                    <a href="{% url 'blog:review_delete' review.id %}" style="color: var(--color-error); text-decoration: none; font-weight: bold;">🗑️ Elimina</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% empty %}
+                    {% endfor %}
+                {% endfor %}
+
+                {% if not professor.prof_subject_set.all %}
+                    <p style="color: #777; font-style: italic;">Encara no hi ha ressenyes per a aquest professor.</p>
                 {% endif %}
             </div>
-        {% empty %}
-            {% endfor %}
-    {% endfor %}
+
+            <div class="back-link" style="margin-top: 2rem;">
+                <a href="javascript:history.back()">← Torna enrere</a>
+            </div>
+        </div>
+    </article>
 </div>
 {% endblock content %}

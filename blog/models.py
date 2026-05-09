@@ -90,7 +90,7 @@ class Review(models.Model):
     # Validators to make the marks between 0 and 10
     overall_rating = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)])
     difficulty_rating = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)])
-    comment = models.TextField()
+    comment = models.CharField(max_length=2000)
     creation_date = models.DateTimeField(auto_now_add=True)  #The current date-time is set automatically
 
     def __str__(self):

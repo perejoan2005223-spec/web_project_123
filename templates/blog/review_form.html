@@ -2,17 +2,17 @@
 
 {% block content %}
 <div class="form-narrow">
-    <h2>{% if object %}Editar Ressenya{% else %}Nova Ressenya{% endif %}</h2>
+    <h2>{% if object %}Editar ressenya{% else %}Nova ressenya{% endif %}</h2>
 
     <form method="post">
         {% csrf_token %}
 
         {{ form.as_p }}
 
-        <button type="submit" class="btn-blue" style="margin-top: 15px;">Guardar Ressenya</button>
+        <button type="submit" class="btn-blue" style="margin-top: 15px;">Desa la ressenya</button>
 
         <div style="text-align: center; margin-top: 15px;">
-            <a href="{% url 'blog:home' %}" style="color: gray; text-decoration: none;">Cancel·lar i tornar</a>
+            <a href="javascript:history.back()" style="color: gray; text-decoration: none;">Cancel·la i torna enrere</a>
         </div>
     </form>
 </div>

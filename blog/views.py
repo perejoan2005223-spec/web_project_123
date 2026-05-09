@@ -6,6 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .models import Professor, Review
+from django import forms
 
 def home(request):
     """Home page view."""
@@ -19,25 +20,45 @@ class PostSignUpView(CreateView):
     success_url = reverse_lazy('login')
     template_name = 'registration/signup.html'
 
-# All professor list
+# Llista de tots els professors
 class ProfessorListView(ListView):
     model = Professor
     template_name = 'blog/professor_list.html'
     context_object_name = 'professors'
 
-# Professor profile
+# Perfil del professor
 class ProfessorDetailView(DetailView):
     model = Professor
     template_name = 'blog/professor_detail.html'
     context_object_name = 'professor'
 
+# Estructura de la ressenya + límits de la valoració
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ['prof_subject', 'overall_rating', 'difficulty_rating', 'comment']
 
+        # Perquè es vegi en català
+        labels = {
+            'prof_subject': 'Assignatura i Professor',
+            'overall_rating': 'Nota Global',
+            'difficulty_rating': 'Dificultat',
+            'comment': 'Comentari',
+        }
+
+        widgets = {
+            'overall_rating': forms.NumberInput(attrs={'min': '0', 'max': '10'}),
+            'difficulty_rating': forms.NumberInput(attrs={'min': '0', 'max': '10'}),
+            'comment': forms.Textarea(attrs={'rows': 5}),
+        }
+
+# Lògica de les ressenyes
 class ReviewCreateView(LoginRequiredMixin, CreateView):
     model = Review
+    form_class = ReviewForm
     # No incloem 'user' als camps perquè l'assignarem automàticament
-    fields = ['prof_subject', 'overall_rating', 'difficulty_rating', 'comment']
     template_name = 'blog/review_form.html'
-    success_url = reverse_lazy('blog:home') # O redirigeix on prefereixis
+    success_url = reverse_lazy('blog:home')
 
     def get_initial(self):
         # Agafem les dades inicials per defecte
@@ -52,25 +73,3 @@ class ReviewCreateView(LoginRequiredMixin, CreateView):
         # Assignem l'usuari actual abans de guardar la instància a la base de dades
         form.instance.user = self.request.user
         return super().form_valid(form)
-
-class ReviewUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Review
-    fields = ['overall_rating', 'difficulty_rating', 'comment'] # L'usuari no hauria de poder canviar l'assignatura
-    template_name = 'blog/review_form.html'
-    success_url = reverse_lazy('blog:home')
-
-    def test_func(self):
-        # Aquesta funció comprova si l'usuari és el propietari.
-        # Si retorna False, Django denegarà l'accés (Error 403).
-        review = self.get_object()
-        return self.request.user == review.user
-
-class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = Review
-    template_name = 'blog/review_confirm_delete.html'
-    success_url = reverse_lazy('blog:home')
-
-    def test_func(self):
-        # Mateixa comprovació: només el creador pot eliminar
-        review = self.get_object()
-        return self.request.user == review.user
