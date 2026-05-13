@@ -2,15 +2,37 @@
 
 {% block content %}
 <div class="container">
-    <h2>Confirmar Eliminació</h2>
-    
-    <p>Estàs segur que vols eliminar la teva ressenya sobre l'assignatura <strong>"{{ object.prof_subject }}"</strong>?</p>
-    <p>Aquesta acció no es pot desfer.</p>
-
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit" style="color: red;">Sí, vull eliminar-la</button>
-        <a href="{% url 'blog:home' %}">Cancel·lar i tornar</a>
-    </form>
+    <article>
+        <h1>Eliminar Ressenya</h1>
+        
+        <div class="post-body">
+            <p style="font-size: 1.1rem; color: #333; margin-bottom: 2rem;">
+                Estàs segur que vols eliminar aquesta ressenya sobre 
+                <strong>{{ object.prof_subject.subject.name_sub }}</strong> de 
+                <strong>{{ object.prof_subject.professor.name_prof }}</strong>?
+            </p>
+            
+            <div style="background: #f9f9f9; border: 1px solid var(--color-footer-border); border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e0e0e0; padding-bottom: 0.8rem; margin-bottom: 1rem;">
+                    <strong style="color: var(--color-heading); font-size: 1rem;">📊 Ratings</strong>
+                    <div style="font-size: 0.95rem;">
+                        ⭐ Global: <strong>{{ object.overall_rating }}/10</strong> | 📚 Dificultat: <strong>{{ object.difficulty_rating }}/10</strong>
+                    </div>
+                </div>
+                
+                <p style="color: #555; line-height: 1.6; margin: 0;">{{ object.comment }}</p>
+            </div>
+            
+            <form method="post" style="display: flex; gap: 1rem; justify-content: center;">
+                {% csrf_token %}
+                <button type="submit" class="btn-signup" style="background-color: var(--color-error); color: white;">
+                    🗑️ Confirma l'eliminació
+                </button>
+                <a href="javascript:history.back()" class="btn-signup">
+                    ← Torna enrere
+                </a>
+            </form>
+        </div>
+    </article>
 </div>
 {% endblock content %}
