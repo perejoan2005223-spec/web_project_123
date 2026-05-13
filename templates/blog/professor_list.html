@@ -23,9 +23,11 @@
 </ul>
 
 <script>
-$(function() {
-    $("#id_professor").val('')
+window.addEventListener('pageshow', function() {
+    $("#id_professor").val('');
+});
 
+$(function() {
     $("#id_professor").autocomplete({
         source: function(request, response) {
             $.ajax({
