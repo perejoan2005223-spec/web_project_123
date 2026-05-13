@@ -66,3 +66,46 @@ class ReviewCRUDTests(TestCase):
             difficulty_rating=5,
             comment="Comentari original"
         )
+
+    def test_elmininar_ressenya(self):
+        """Test per comprovar que un usuari pot esborrar la seva pròpia ressenya."""
+
+        review = Review.objects.create(
+            user=self.user,
+            prof_subject=self.prof_subject,
+            overall_rating=7,
+            difficulty_rating=5,
+            comment="Aquesta ressenya serà esborrada."
+        )
+        #Comprovar que s'ha creat
+        self.assertEqual(Review.objects.count(), 1)
+
+        self.client.login(username='alumne1', password='password123')
+        response = self.client.post(reverse('blog:review_delete', kwargs={'pk': review.pk}))
+
+        self.assertRedirects(response, reverse('blog:professor_detail', kwargs={'pk': self.professor.id}))
+
+        # 5. Comprovem que la ressenya JA NO existeix a la base de dades
+        self.assertEqual(Review.objects.count(), 0)
+
+    def test_esborrar_review_altre_usuari(self):
+        """Test que impedeix a un usuari esborrar la ressenya d'un altre."""
+
+        review = Review.objects.create(
+            user=self.other_user,  #Propietari: alumne2
+            prof_subject=self.prof_subject,
+            overall_rating=8,
+            difficulty_rating=4,
+            comment="Ressenya d'un altre."
+        )
+
+        #Iniciem sessió amb el NO propietari
+        self.client.login(username='alumne1', password='password123')
+
+        response = self.client.post(reverse('blog:review_delete', kwargs={'pk': review.pk}))
+
+        #Comprovem que nomes pot trobar les seves reviews i no les dels demés (404 Forbidden)
+        self.assertEqual(response.status_code, 404)
+
+        #Comprovem que la ressenya SEGUEIX a la base de dades
+        self.assertEqual(Review.objects.count(), 1)
