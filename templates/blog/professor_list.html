@@ -7,7 +7,7 @@
 
 <div class="search-box">
     <label for="id_professor">🔍 Cerca un professor:</label>
-    <input id="id_professor" type="text" placeholder="Escriu-ne el nom...">
+    <input id="id_professor" type="text" placeholder="Escriu-ne el nom..." autocomplete="off" name="">
 </div>
 
 <ul class="professor-list">
@@ -24,12 +24,6 @@
 
 <script>
 $(function() {
-    if (window.history.replaceState) {
-        window.history.replaceState(null, null, window.location.href);
-    }
-
-    $("#id_professor").val('');
-
     $("#id_professor").autocomplete({
         source: function(request, response) {
             $.ajax({
@@ -41,6 +35,7 @@ $(function() {
             });
         },
         select: function(event, ui) {
+            event.preventDefault();
             window.location.href = ui.item.url;
         }
     });
