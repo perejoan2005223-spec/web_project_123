@@ -7,6 +7,13 @@ from django.views.generic import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .models import Professor, Review
 from django import forms
+from django.http import JsonResponse
+
+def professor_autocomplete(request):
+    query = request.GET.get('term', '')
+    professors = Professor.objects.filter(name_prof__icontains=query)
+    results = [{'label': p.name_prof, 'value': p.name_prof, 'url': f'/profesores/{p.pk}/'} for p in professors]
+    return JsonResponse(results, safe=False)
 
 def home(request):
     """Home page view."""

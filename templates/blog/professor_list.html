@@ -24,14 +24,17 @@
 
 <script>
 $(function() {
-    var professors = [
-        {% for professor in professors %}
-            { label: "{{ professor.name_prof }}", url: "{% url 'blog:professor_detail' professor.pk %}" }{% if not forloop.last %},{% endif %}
-        {% endfor %}
-    ];
     $("#id_professor").autocomplete({
-        source: professors,
-        select: function (event, ui){
+        source: function(request, response) {
+            $.ajax({
+                url: "{% url 'blog:professor_autocomplete' %}",
+                data: { term: request.term },
+                success: function(data) {
+                    response(data);
+                }
+            });
+        },
+        select: function(event, ui) {
             window.location.href = ui.item.url;
         }
     });

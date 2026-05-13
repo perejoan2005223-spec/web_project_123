@@ -8,6 +8,9 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('signup/', views.PostSignUpView.as_view(), name='signup'),
     path('profesores/', views.ProfessorListView.as_view(), name='professor_list'),
+
+    path('profesores/autocomplete/', views.professor_autocomplete, name='professor_autocomplete'),
+
     path('profesores/<int:pk>/', views.ProfessorDetailView.as_view(), name='professor_detail'),
 
     # Rutes del CRUD de Review
