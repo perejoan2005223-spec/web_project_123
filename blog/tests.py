@@ -67,6 +67,58 @@ class ReviewCRUDTests(TestCase):
             comment="Comentari original"
         )
 
+        #Iniciem sessió amb l'usuari propietari
+        self.client.login(username='alumne1', password='password123')
+
+        dades_noves = {
+            'prof_subject': self.prof_subject.id,
+            'overall_rating': 9,
+            'difficulty_rating': 8,
+            'comment': "He canviat d'opinió, el professor és un duro!"
+        }
+
+        response = self.client.post(reverse('blog:review_update', kwargs={'pk': review.pk}), dades_noves)
+
+        self.assertRedirects(response, reverse('blog:professor_detail', kwargs={'pk': self.professor.id}))
+
+        #Actualitzem la nostra variable 'review' amb els fets reals de la base de dades
+        review.refresh_from_db()
+
+        #Comprovem que els canvis s'han aplicat correctament
+        self.assertEqual(review.comment, "He canviat d'opinió, el professor és un duro!")
+        self.assertEqual(review.overall_rating, 9)
+
+    def test_editar_review_altre_usuari(self):
+        """Test que impedeix a un usuari editar la ressenya d'un altre."""
+        review = Review.objects.create(
+            user=self.other_user, #Propietari: alumne2
+            prof_subject=self.prof_subject,
+            overall_rating=8,
+            difficulty_rating=6,
+            comment="Aquesta ressenya és meva."
+        )
+
+        #Iniciem sessió amb el NO propietari
+        self.client.login(username='alumne1', password='password123')
+
+        dades_malicioses = {
+            'prof_subject': self.prof_subject.id,
+            'overall_rating': 1,
+            'difficulty_rating': 1,
+            'comment': "Hackejat per l'alumne1"
+        }
+
+        #Intentem editar-la
+        response = self.client.post(reverse('blog:review_update', kwargs={'pk': review.pk}), dades_malicioses)
+
+        #Comprovem que nomes pot trobar les seves reviews i no les dels demés (404 Not found)
+        self.assertEqual(response.status_code, 404)
+
+        #Verifiquem que la ressenya NO ha canviat a la base de dades
+        review.refresh_from_db()
+        self.assertEqual(review.comment, "Aquesta ressenya és meva.")
+        self.assertEqual(review.overall_rating, 8)
+
     def test_elmininar_ressenya(self):
         """Test per comprovar que un usuari pot esborrar la seva pròpia ressenya."""
 
@@ -104,7 +156,7 @@ class ReviewCRUDTests(TestCase):
 
         response = self.client.post(reverse('blog:review_delete', kwargs={'pk': review.pk}))
 
-        #Comprovem que nomes pot trobar les seves reviews i no les dels demés (404 Forbidden)
+        #Comprovem que nomes pot trobar les seves reviews i no les dels demés (404 Not found)
         self.assertEqual(response.status_code, 404)
 
         #Comprovem que la ressenya SEGUEIX a la base de dades
