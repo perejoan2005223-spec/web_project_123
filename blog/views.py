@@ -5,6 +5,7 @@ from django.views.generic import CreateView, ListView, DetailView # generic view
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
+from django.http import Http404
 from .models import Professor, Review
 from django import forms
 from django.http import JsonResponse
@@ -80,3 +81,44 @@ class ReviewCreateView(LoginRequiredMixin, CreateView):
         # Assignem l'usuari actual abans de guardar la instància a la base de dades
         form.instance.user = self.request.user
         return super().form_valid(form)
+
+
+# Edició de ressenya
+class ReviewUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Review
+    form_class = ReviewForm
+    template_name = 'blog/review_form.html'
+    
+    def test_func(self):
+        # Verificar que l'usuari actual és el propietari de la ressenya
+        review = self.get_object()
+        return self.request.user == review.user
+    
+    def get_success_url(self):
+        # Redirigir al detall del professor després de l'edició
+        review = self.get_object()
+        return reverse_lazy('blog:professor_detail', kwargs={'pk': review.prof_subject.professor.id})
+    
+    def handle_no_permission(self):
+        # Si l'usuari no té permís, mostrar error 404
+        raise Http404("No tens permís per editar aquesta ressenya.")
+
+
+# Eliminació de ressenya
+class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Review
+    template_name = 'blog/review_confirm_delete.html'
+    
+    def test_func(self):
+        # Verificar que l'usuari actual és el propietari de la ressenya
+        review = self.get_object()
+        return self.request.user == review.user
+    
+    def get_success_url(self):
+        # Redirigir al detall del professor després de l'eliminació
+        review = self.get_object()
+        return reverse_lazy('blog:professor_detail', kwargs={'pk': review.prof_subject.professor.id})
+    
+    def handle_no_permission(self):
+        # Si l'usuari no té permís, mostrar error 404
+        raise Http404("No tens permís per eliminar aquesta ressenya.")
