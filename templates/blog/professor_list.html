@@ -24,6 +24,8 @@
 
 <script>
 $(function() {
+    $("#id_professor").val('')
+
     $("#id_professor").autocomplete({
         source: function(request, response) {
             $.ajax({
