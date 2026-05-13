@@ -15,4 +15,6 @@ urlpatterns = [
 
     # Rutes del CRUD de Review
     path('review/nova/', views.ReviewCreateView.as_view(), name='review_create'),
+    path('review/<int:pk>/editar/', views.ReviewUpdateView.as_view(), name='review_update'),
+    path('review/<int:pk>/eliminar/', views.ReviewDeleteView.as_view(), name='review_delete'),
 ]
