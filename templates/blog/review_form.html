@@ -1,18 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
+// Carreguem la llibreria jQuery per poder fer servir AJAX i gestionar esdeveniments fàcilment
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <div class="form-narrow">
     <h2>{% if object %}Editar ressenya{% else %}Nova ressenya{% endif %}</h2>
+
+    // Formulari per crear o editar una ressenya
     <form method="post">
         {% csrf_token %}
+
         {{ form.as_p }}
+
+        // Botó que permet traduir el comentari introduït a l'anglès mitjançant una API externa
         <button type="button" id="btn-api-externa" class="btn-blue" style="background-color: #17a2b8; margin-bottom: 15px; padding: 5px 10px; font-size: 0.9em; width: 100%;">
             🌍 Tradueix el comentari a l'anglès (API Externa)
         </button>
         <br>
         <button type="submit" class="btn-blue" style="margin-top: 15px;">Desa la ressenya</button>
+
         <div style="text-align: center; margin-top: 15px;">
             <a href="javascript:history.back()" style="color: gray; text-decoration: none;">Cancel·la i torna enrere</a>
         </div>
@@ -20,8 +27,13 @@
 </div>
 
 <script>
+    // Quan el document estigui carregat, activem el codi JavaScript
     $(document).ready(function() {
+
+        // Detectem quan l'usuari fa clic al botó de traducció
         $("#btn-api-externa").click(function() {
+
+            // Obtenim el text actual escrit al camp del comentari
             var textActual = $("#id_comment").val();
 
             // Comprovem que l'usuari hagi escrit alguna cosa abans de cridar l'API
@@ -29,29 +41,35 @@
                 alert("Si us plau, escriu primer un comentari a la caixa de text per poder-lo traduir.");
                 return;
             }
+
+            // Guardem el botó i el seu text original per poder restaurar-lo després
             var btn = $(this);
             var textOriginal = btn.text();
+
             btn.text("⏳ Traduint amb l'API externa...");
 
-            // Cridem a l'API externa de MyMemory per traduïr
+            // Cridem l'API externa de MyMemory per traduir el comentari
             $.ajax({
                 url: "https://api.mymemory.translated.net/get",
                 type: "GET",
                 data: {
                     q: textActual,
-                    langpair: "ca|en" // De Català al anglés.
+                    langpair: "ca|en" // Traducció de català a anglès
                 },
                 dataType: "json",
+
                 success: function(data) {
+
+                    // Comprovem que l'API hagi retornat un text traduït i substituïm
                     if (data.responseData && data.responseData.translatedText) {
-                        // Posem el text traduït al formulari
                         $("#id_comment").val(data.responseData.translatedText);
                     } else {
                         alert("L'API no ha retornat cap traducció.");
                     }
-                    // Tornem el botó a la normalitat
                     btn.text(textOriginal);
                 },
+
+                // Aquesta funció s'executa si hi ha algun error en connectar amb l'API
                 error: function() {
                     alert("Hi ha hagut un error en connectar amb l'API externa de traducció.");
                     btn.text(textOriginal);
