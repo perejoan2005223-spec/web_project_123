@@ -2,9 +2,13 @@
 
 {% block content %}
 <div class="container">
-    <article>
-        <h1>{{ professor.name_prof }}</h1>
-        <p class="post-meta" style="font-size: 1.1rem;">Departament: {{ professor.department.name_dept }}</p>
+    <article vocab="http://schema.org/" typeof="Person">
+
+        <h1 property="name">{{ professor.name_prof }}</h1>
+
+        <p class="post-meta" style="font-size: 1.1rem;" property="affiliation" typeof="Organization">
+            Departament: <span property="name">{{ professor.department.name_dept }}</span>
+        </p>
 
         <div class="post-body">
             <h3>Assignatures que imparteix:</h3>
@@ -25,25 +29,36 @@
 
             <hr style="margin: 3rem 0 2rem 0; border: 0; border-top: 1px dashed var(--color-footer-border);">
 
-            <h3>Ressenyes d’aquest professor:</h3>
+            <h3>Ressenyes d'aquest professor:</h3>
             <div style="margin-top: 1.5rem;">
                 {% for ps in professor.prof_subject_set.all %}
                     {% for review in ps.reviews.all %}
-                        <div style="background: white; border: 1px solid var(--color-footer-border); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.2rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                        <div typeof="Review" style="background: white; border: 1px solid var(--color-footer-border); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.2rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+
+                            <span property="itemReviewed" typeof="Person" style="display: none;">
+                                <span property="name">{{ professor.name_prof }}</span>
+                            </span>
 
                             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f0f0; padding-bottom: 0.8rem; margin-bottom: 1rem;">
-                                <strong style="color: var(--color-heading); font-size: 1.1rem;">👤 {{ review.user.username }}</strong>
+                                <strong property="author" typeof="Person" style="color: var(--color-heading); font-size: 1.1rem;">
+                                     <span property="name">{{ review.user.username }}</span>
+                                </strong>
+
                                 <div style="background: #f9f9f9; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.9rem;">
-                                    ⭐ Nota: <strong>{{ review.overall_rating }}/10</strong> &nbsp;|&nbsp; 📚 Dificultat: <strong>{{ review.difficulty_rating }}/10</strong>
+                                    <span property="reviewRating" typeof="Rating">
+                                        Nota: <strong property="ratingValue">{{ review.overall_rating }}</strong>/<span property="bestRating">10</span>
+                                        <meta property="worstRating" content="0">
+                                    </span>
+                                    &nbsp;|&nbsp; Dificultat: <strong>{{ review.difficulty_rating }}/10</strong>
                                 </div>
                             </div>
 
-                            <p style="color: #444; font-size: 1.05rem; line-height: 1.6;">{{ review.comment }}</p>
+                            <p property="reviewBody" style="color: #444; font-size: 1.05rem; line-height: 1.6;">{{ review.comment }}</p>
 
                             {% if user == review.user %}
                                 <div class="actions" style="margin-top: 1.5rem; text-align: right; font-size: 0.9rem;">
-                                    <a href="{% url 'blog:review_update' review.id %}" style="color: var(--color-btn-primary); text-decoration: none; margin-right: 15px; font-weight: bold;">✏️ Edita</a>
-                                    <a href="{% url 'blog:review_delete' review.id %}" style="color: var(--color-error); text-decoration: none; font-weight: bold;">🗑️ Elimina</a>
+                                    <a href="{% url 'blog:review_update' review.id %}" style="color: var(--color-btn-primary); text-decoration: none; margin-right: 15px; font-weight: bold;">Edita</a>
+                                    <a href="{% url 'blog:review_delete' review.id %}" style="color: var(--color-error); text-decoration: none; font-weight: bold;">Elimina</a>
                                 </div>
                             {% endif %}
                         </div>
@@ -57,7 +72,7 @@
             </div>
 
             <div class="back-link" style="margin-top: 2rem;">
-                <a href="javascript:history.back()">← Torna enrere</a>
+                <a href="javascript:history.back()">Torna enrere</a>
             </div>
         </div>
     </article>
